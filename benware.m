@@ -44,7 +44,14 @@ loadexpt;
 fakeHardware = false;
 TEST = false;
 if TEST
-    dataRoot = '\';
+    if ispc
+      dataRoot = [tempdir 'benware'];
+      if ~exist(dataRoot,'dir')
+        mkdir(dataRoot);
+      end
+    else
+      dataRoot = '\';
+    end
     fakeHardware = true;
 end
 

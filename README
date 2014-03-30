@@ -84,21 +84,34 @@ Choose from the list of stimuli. Press k in the Benware window to see a list of 
 
 -- Installation
 
-Needs to be done on Linux or Mac, so copy your data to a Unix machine first.
+Can be done on Linux, Mac or Windows
 
-Download Benware from http://github.com/beniamino38/benware
+For Linux and Mac, download Benware from http://github.com/beniamino38/benware
+For Windows download from https://github.com/strahl/benware (should also work on Linux and Mac, but not tested yet)
 
 On a Linux machine: Install anaconda
 On a Mac: Install Enthought Canopy
+On a PC: Install pythonxy (MinGW package needed)
 
 Make sure pandas version 0.12.0 is installed:
  pip install -Iv pandas==0.12.0
 
-Download spikedetekt from https://github.com/beniamino38/spikedetekt
+On a PC: Make sure that disutils uses MinGW (howto see for example https://github.com/cython/cython/wiki/InstallingOnWindows)
+Create a file named distutils.cfg (if you already don't have it) in your PythonXYLibdistutils and add to it the following lines:
+ [build]
+ compiler = mingw32
+
+For Linux and Mac, download spikedetekt from https://github.com/beniamino38/spikedetekt
+For Windows, download from https://github.com/strahl/spikedetekt (should also work on Linux and Mac, but not tested yet)
 (note this is my modified version, not the standard one)
 In Terminal:
  cd spikedetekt
  python setup.py install
+
+For Windows, install "KlustaViewa Full Installer for Windows 64 bits" (http://klustaviewa.rossant.net/klustaviewa-setup.exe)
+Manually apply Ben's patch https://github.com/beniamino38/klustaviewa/commit/2a794c4e3506dea9bca5776d2a562a28a9852dbf
+
+For Linux and Mac, do these following steps:
 
 Download kwiklib from https://github.com/beniamino38/kwiklib
 (note this is my modified version, not the standard one)
@@ -116,8 +129,8 @@ In Terminal:
  export CFLAGS=-Qunused-arguments
  export CPPFLAGS=-Qunused-arguments
  python setup.py install ]
- 
-(for all of the above, you may need "sudo python setup.py install" instead)
+
+(for all of the above, you may need "sudo python setup.py install" instead and in Windows a Command Window with local admin rights)
 
 
 -- Clustering
