@@ -52,9 +52,9 @@ if(strcmpi(vowel.timbre,'a'))
 elseif(strcmpi(vowel.timbre,'e'))
     vowel.formants   = [730 2058 2979 4294];            % for vowel e
 elseif(strcmpi(vowel.timbre,'i'))
-    vowel.formants   = [437 2761 3372 4352];            % for vowel e
+    vowel.formants   = [437 2761 3372 4352];            % for vowel i
 elseif(strcmpi(vowel.timbre,'u'))
-    vowel.formants   = [460 1105 2735 4115];            % for vowel e
+    vowel.formants   = [460 1105 2735 4115];            % for vowel u
 end
 
 vowel.octavesep  = 0.75;
