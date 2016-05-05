@@ -97,7 +97,7 @@ else
 end
 
 global TEST
-if TEST ~= true
+if isempty(TEST) || TEST ~= true
   % verify that we have the right conditions from the user
   verifyExpt(grid, expt);
 
@@ -107,4 +107,9 @@ if TEST ~= true
 
   % save grid metadata
   saveGridMetadata(grid, expt);
-end
+
+else
+  fprintf('Global variable TEST is true (used by testgrid.m)')
+  fprintf('Not checking grid save name or saving grid metadata')
+
+else

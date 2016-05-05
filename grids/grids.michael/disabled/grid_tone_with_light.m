@@ -8,25 +8,21 @@ function grid = grid_tone_with_light()
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Frequency', 'Tone Delay (ms)', 'Tone Duration (ms)', 'Light voltage (V)', 'Light delay (ms)', 'Light Duration (ms)', 'Level (dB)'};
 
   voltages = [0 5];
-  level=[30 40 50 60 70 80]
-  tone_delay = [100 150];
-  freqs = logspace(log10(4000), log10(1000*2^6),32);
+  level=[40 50 60 70 80 90]
+  tone_delay = [42,100,350];
+  freqs = logspace(log10(1000), log10(1000*2^6),15);
   
   %control conditions
-  no_light_condition=createPermutationGrid(550, freqs, 100, 100, voltages(1), 100, 50, level);
+  no_light_condition=createPermutationGrid(500, freqs, 100, 50, voltages(1), 50, 10, level);
    %Create light condition
-   light_grid=createPermutationGrid(550, freqs, tone_delay, 100, voltages(2), 100, 50, level);
+   light_grid=createPermutationGrid(500, freqs, tone_delay, 50, voltages(2), 50, 10, level);
   
-   spontanous =[550,10, 100, 10, voltages(1), 50, 1, -50];
+   spontanous =[500,10, 100, 10, voltages(1), 50, 1, -50];
     grid.stimGrid = cat(1,light_grid,no_light_condition,spontanous);
-  
-%  fprintf('For calibration only!\n');
-%  pause;
-%  grid.stimGrid = [1000, 1000, 250, 500, 0, 0.01, 0.01, 80];
 
   % sweep parameters
    grid.postStimSilence = 0;
-   grid.repeatsPerCondition = 15;
+   grid.repeatsPerCondition = 10;
   
 
 

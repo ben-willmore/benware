@@ -8,24 +8,44 @@
 % You can also inspect the 'expt' and 'grid' structures after this script
 % has run.
 
-
-% if true, play the sounds using sound()
-playsounds = false;
-
-% multiplier to adjust sounds by to make them audible
-level_adjust = 10;
-
 % if true, play the entire randomised stimulus set specified by grid.randomisedGrid
 % if false, just play each stimulus once as specified by grid.stimGrid
 play_complete_grid = false;
 
-% this path will be replaced in all fields of the grid where it is found
-%replace_path = {'E:\auditory-objects\sounds-uncalib', '~/scratch/benware.stimuli'};
+if ispc
+  % assume we are on the rig machine for which expt.username is configured
 
-% stimulus directory for "directory of wav file" stimuli
-%stimulus_dir = './stimulusdir';
+  % if true, play the sounds using sound()
+  playsounds = false;
+
+  % multiplier to adjust sounds by to make them audible
+  level_adjust = 10;
+
+  % don't set replace_path or stimulus_dir, on the assumption that these 
+  % are already correct.
+
+else
+  % assume we are not on a rig machine, and so we'll play sounds through the
+  % computer speaker, and use modified paths
+
+  % if true, play the sounds using sound()
+  playsounds = true;
+
+  % multiplier to adjust sounds by to make them audible
+  level_adjust = 10;
+
+  % this path will be replaced in all fields of the grid where it is found
+  replace_path = {'E:\auditory-objects\sounds-uncalib', '~/scratch/benware.stimuli'};
+
+  % stimulus directory for "directory of wav file" stimuli
+  stimulus_dir = './stimulusdir';
+end
 
 % no more parameters after this
+
+% this prevents benware from creating a new directory to save data in (see prepareGrid.m)
+global TEST
+TEST = false; 
 
 loadexpt;
 % use different stimulus_dir than the one in expt
