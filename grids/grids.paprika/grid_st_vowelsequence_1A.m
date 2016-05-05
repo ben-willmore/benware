@@ -43,10 +43,11 @@ grid.stimGridTitles = {'Frequency of vowel 1','Frequency of vowel 2',...
                        'Frequency of vowel 3','Frequency of vowel 4'};
 
 % stimulus parameters
-vowel.timbre     = 'i'; % 'a' from 09.05.16
-vowel.F0         = 150; % 125Hz from 09.05.16
+vowel.timbre     = 'a'; 
+vowel.F0         = 125; 
 vowel.order      = [2 0 3 1]; 
-vowel.freqs      = floor(vowel.F0*2.^(0.75.*vowel.order)); % [353 125 594 210]; for experiment 1A only
+vowel.octavesep  = 0.75;
+vowel.freqs      = floor(vowel.F0*2.^(vowel.octavesep.*vowel.order)); % [353 125 594 210]; for experiment 1A only
 vowel.formants   = [936 1551 2815 4290];            % for vowel a
 vowel.bandwidth  = [80 70 160 300];                 % Hz, constant for each vowel
 vowel.dur        = 0.15;                            % seconds

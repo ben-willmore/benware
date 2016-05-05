@@ -7,6 +7,7 @@ based on Gavornik and Bear, 2014 - experiment 1
 
 Sundeep Teki
 v1: 29.04.16
+v2: 05.05.16 - Ben added varargin as input to get correct vowel frequencies (lines 20,21, 52, 54)
 %}
 
 
@@ -47,7 +48,7 @@ end
 % Now synthesize the vowel
 seq_vowel   = []; 
 
-for i = 1:length(vowel.freqs)
+for i = 1:length(vowel_freqs)
     
     vowel_f0 = vowel_freqs(i);      % added by ST
     waveform = [];
