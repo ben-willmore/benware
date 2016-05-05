@@ -43,6 +43,10 @@ end
 
 % no more parameters after this
 
+% this prevents benware from creating a new directory to save data in (see prepareGrid.m)
+global TEST
+TEST = false; 
+
 loadexpt;
 % use different stimulus_dir than the one in expt
 if exist('stimulus_dir', 'var')

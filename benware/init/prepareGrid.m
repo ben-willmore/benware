@@ -96,12 +96,20 @@ else
 
 end
 
-% verify that we have the right conditions from the user
-verifyExpt(grid, expt);
+global TEST
+if isempty(TEST) || TEST ~= true
+  % verify that we have the right conditions from the user
+  verifyExpt(grid, expt);
 
-% check for existence of data directory.
-% If it does exist, use grid.saveName to store alternative name.
-grid.saveName = verifySaveDir(grid, expt);
+  % check for existence of data directory.
+  % If it does exist, use grid.saveName to store alternative name.
+  grid.saveName = verifySaveDir(grid, expt);
 
-% save grid metadata
-saveGridMetadata(grid, expt);
+  % save grid metadata
+  saveGridMetadata(grid, expt);
+
+else
+  fprintf('Global variable TEST is true (used by testgrid.m)')
+  fprintf('Not checking grid save name or saving grid metadata')
+
+else
