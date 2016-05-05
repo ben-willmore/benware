@@ -112,4 +112,4 @@ else
   fprintf('Global variable TEST is true (used by testgrid.m)')
   fprintf('Not checking grid save name or saving grid metadata')
 
-else
+end
