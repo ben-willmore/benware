@@ -45,6 +45,7 @@ loadexpt;
 
 % set defaults
 fakeHardware = false;
+global TEST
 TEST = false;
 if TEST
     if ispc

@@ -96,15 +96,12 @@ else
 
 end
 
-global TEST
-if TEST ~= true
-  % verify that we have the right conditions from the user
-  verifyExpt(grid, expt);
+% verify that we have the right conditions from the user
+verifyExpt(grid, expt);
 
-  % check for existence of data directory.
-  % If it does exist, use grid.saveName to store alternative name.
-  grid.saveName = verifySaveDir(grid, expt);
+% check for existence of data directory.
+% If it does exist, use grid.saveName to store alternative name.
+grid.saveName = verifySaveDir(grid, expt);
 
-  % save grid metadata
-  saveGridMetadata(grid, expt);
-end
+% save grid metadata
+saveGridMetadata(grid, expt);
