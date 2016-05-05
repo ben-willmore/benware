@@ -1,7 +1,7 @@
 function grid = grid_st_vowelsequence_1A()
 
-%{            
-    The grid function will be called (by prepareGrid) as: grid = grid_st_vowelsequence_1A()        
+%{
+    The grid function will be called (by prepareGrid) as: grid = grid_st_vowelsequence_1A()
     
     Will return a grid structure containing the fields:
          grid.sampleRate: stimulus sample rate
@@ -17,7 +17,7 @@ function grid = grid_st_vowelsequence_1A()
      uncomp = stimgen_function(expt, grid, parameters{:})
      
  % check
-1. seed type 
+1. seed type
 2. tdt100k = 97656Hz?
 3. check fields in verifyGridFields.m
 4. pass a stimulus structure to stimgen?
@@ -40,15 +40,25 @@ grid.stimGenerationFunctionName = 'stimgen_st_vowelsequence_1A';
 %% Stimulus parameters
 
 grid.stimGridTitles = {'Frequency of vowel 1','Frequency of vowel 2',...
-                       'Frequency of vowel 3','Frequency of vowel 4'};
+    'Frequency of vowel 3','Frequency of vowel 4'};
 
 % stimulus parameters
-vowel.timbre     = 'a'; 
-vowel.F0         = 125; 
-vowel.order      = [2 0 3 1]; 
+vowel.timbre     = 'a'; %'a';
+vowel.F0         = 125; %125;
+vowel.order      = [2 0 3 1]; %[2 0 3 1];
+
+if(strcmpi(vowel.timbre,'a'))
+    vowel.formants   = [936 1551 2815 4290];            % for vowel a
+elseif(strcmpi(vowel.timbre,'e'))
+    vowel.formants   = [730 2058 2979 4294];            % for vowel e
+elseif(strcmpi(vowel.timbre,'i'))
+    vowel.formants   = [437 2761 3372 4352];            % for vowel e
+elseif(strcmpi(vowel.timbre,'u'))
+    vowel.formants   = [460 1105 2735 4115];            % for vowel e
+end
+
 vowel.octavesep  = 0.75;
 vowel.freqs      = floor(vowel.F0*2.^(vowel.octavesep.*vowel.order)); % [353 125 594 210]; for experiment 1A only
-vowel.formants   = [936 1551 2815 4290];            % for vowel a
 vowel.bandwidth  = [80 70 160 300];                 % Hz, constant for each vowel
 vowel.dur        = 0.15;                            % seconds
 vowel.level      = 65;                              % dB
@@ -77,7 +87,7 @@ end
 
 % Experimental group of animals - test phase
 if(strcmpi(grid.animalgroup,'Experimental') && strcmpi(grid.condition,'Test'))
-        
+    
     vowel.sequence                  = input('Enter name of sequence - [ABCD / DCBA / ABCD300]: ','s');
     
     if(strcmpi(vowel.sequence,'ABCD'))
@@ -85,7 +95,7 @@ if(strcmpi(grid.animalgroup,'Experimental') && strcmpi(grid.condition,'Test'))
     end
     
     if(strcmpi(vowel.sequence,'ABCD300'))
-        vowel.dur                   = 0.3; 
+        vowel.dur                   = 0.3;
         grid.stimGrid               = vowel.freqs;
     end
     
@@ -116,7 +126,7 @@ if(strcmpi(grid.animalgroup,'Control') && strcmpi(grid.condition,'Test'))
     end
     
     if(strcmpi(vowel.sequence,'ABCD300'))
-        vowel.dur                   = 0.3; 
+        vowel.dur                   = 0.3;
         grid.stimGrid               = vowel.freqs;
     end
     
