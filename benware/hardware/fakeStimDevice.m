@@ -115,6 +115,7 @@ classdef fakeStimDevice < handle
           idx = 1:4:obj.nSamples;
         end
         %keyboard
+        size([obj.waveformL(idx); obj.waveformR(idx)])
         player = audioplayer([obj.waveformL(idx); obj.waveformR(idx)], fs);
         play(player);
         obj.intactWaveformL = obj.waveformL(1:obj.nSamples);
