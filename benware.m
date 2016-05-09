@@ -12,7 +12,7 @@ printGreetings;
 % variables intended for manipulation by future UI
 global state;
 
-% save data in a single file, as used by klustasuite
+% save data in a single file per sweep, as used by klustasuite
 state.klustaFormat = true;
 
 global checkdata;
@@ -46,7 +46,8 @@ loadexpt;
 % set defaults
 fakeHardware = false;
 
-% 
+% if TEST==true, we won't create a directory to save the data in
+% (see prepareGrid.m)
 global TEST
 TEST = false;
 if TEST
@@ -61,6 +62,7 @@ if TEST
     fakeHardware = true;
 end
 
+% CALIB is no longer used. should always be falso
 if ~exist('CALIB', 'var')
   CALIB = false;
 end
@@ -88,7 +90,7 @@ else
 end
 
 if state.klustaFormat
-  % don't save klustaformat data in a subdirectory, don't add sweep/channel numbers
+  % don't save klustaformat data in a subdirectory, don't add channel numbers
   % and add .dat to the end
   expt.dataFilename = regexprep(expt.dataFilename,'raw.f32[\\\/]','');
   expt.dataFilename = regexprep(expt.dataFilename,'.channel.%C','');
