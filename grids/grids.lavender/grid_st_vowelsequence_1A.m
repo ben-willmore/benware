@@ -15,37 +15,31 @@ function grid = grid_st_vowelsequence_1A()
     
      The stimulus generation function will be called by BenWare to generate each stimulus as:
      uncomp = stimgen_function(expt, grid, parameters{:})
-     
- % check
-1. seed type
-2. tdt100k = 97656Hz?
-3. check fields in verifyGridFields.m
-4. pass a stimulus structure to stimgen?
 
-% to do
-1. add experiment-specific greeting - expt/control conditions, ferret
-names, training and test days
 
 Sundeep Teki
 v1: 29.04.16
 
+v2: 06.05.16
+Added more vowel fields, start up greetings, grid.condition check based on day
 %}
+
 
 %% required parameters
 
 grid.seed                       = rng;
-grid.sampleRate                 = tdt100k; % check this value = 97656Hz?
+grid.sampleRate                 = tdt100k;
 grid.stimGenerationFunctionName = 'stimgen_st_vowelsequence_1A';
+grid.date                       = datestr(now);
 
 %% Stimulus parameters
 
-grid.stimGridTitles = {'Frequency of vowel 1','Frequency of vowel 2',...
-    'Frequency of vowel 3','Frequency of vowel 4'};
+grid.stimGridTitles = {'Frequency of vowel 1','Frequency of vowel 2','Frequency of vowel 3','Frequency of vowel 4'};
 
 % stimulus parameters
-vowel.timbre     = 'a'; %'a';
-vowel.F0         = 125; %125;
-vowel.order      = [2 0 3 1]; %[2 0 3 1];
+vowel.F0         = 125; % Hz
+vowel.order      = [2 0 3 1];
+vowel.timbre     = 'a';
 
 if(strcmpi(vowel.timbre,'a'))
     vowel.formants   = [936 1551 2815 4290];            % for vowel a
@@ -55,6 +49,8 @@ elseif(strcmpi(vowel.timbre,'i'))
     vowel.formants   = [437 2761 3372 4352];            % for vowel i
 elseif(strcmpi(vowel.timbre,'u'))
     vowel.formants   = [460 1105 2735 4115];            % for vowel u
+elseif(strcmpi(vowel.timbre,'test'))
+    vowel.formants   = [1350 2384 3724 4012];           % for testing purposes only
 end
 
 vowel.octavesep  = 0.75;
@@ -65,21 +61,49 @@ vowel.level      = 65;                              % dB
 vowel.amp        = 20e-6*10.^(vowel.level/20);      % convert to Pascals
 vowel.carrier    = 'clicktrain';
 vowel.hannramp   = 0.005;                           % ramp size - 5ms
-vowel.isi        = 1.5;                             % post-stim interval; seconds
+vowel.preisi     = 0.5;                             % pre-stim interval; seconds
+vowel.postisi    = 1;                               % post-stim interval; seconds
+
+%% Greetings
+
+fid = 1;
+fprintf(fid, 'VOWEL PARAMETERS \n');
+fprintf(fid, 'F0 = %1.0f\n', vowel.F0);
+fprintf(fid, 'Frequencies = %d\n', vowel.freqs);
+fprintf(fid, 'Timbre = [%s]\n', vowel.timbre);
+fprintf(fid, 'Formant frequencies = %d\n', vowel.formants);
+fprintf(fid, 'Duration = %d\n', vowel.dur);
+fprintf(fid, 'Level = %d\n', vowel.level);
+fprintf(fid, '\n');
+fprintf(fid, 'EXPERIMENT PARAMETERS  \n');
+fprintf(fid, 'Experimental animals: Kea & Munchkin\n');
+fprintf(fid, 'Control animals:      Lavender & Paprika\n');
+fprintf(fid, 'Training phase:       Days 1 - 4   [May 9-12] \n');
+fprintf(fid, 'Testing phase:        Days 5, 8, 10, 12   [May 13, 16, 18, 20] \n');
+fprintf(fid, '\n');
+fprintf(fid, 'ENTER EXPERIMENT DETAILS \n');
+
 
 %% Specify experimental condition, animal group and testing day
 
-grid.animalgroup = input('Enter the animal group - [Experimental / Control]: ','s');
+grid.day_expt    = input('Enter the day of experiment - 1/2/3/4/5 etc.: ');
 grid.ferret      = input('Enter the name of the ferret: ','s');
-grid.condition   = input('Enter the experimental condition - [Training / Test]: ','s');
-grid.day         = input('Enter the day of experiment - 1/2/3/4/5/6-10 etc.: ');
-grid.date        = datestr(now);
+grid.animalgroup = input('Enter the animal group - [Experimental / Control]: ','s');
+
+if(grid.day_expt < 5)
+    warning('Training days = 1/2/3/4 only');
+    grid.condition   = 'Training';  %input('Enter the experimental condition - [Training / Test]: ','s');
+    fprintf(1, '%%%%%   grid.condition = [%s]\n', grid.condition);
+else
+    warning('Test days = 5/8/10/12 only');
+    grid.condition = 'Test';
+    fprintf(1, '%%%%%   grid.condition = [%s]\n', grid.condition);
+end
 
 
 % Experimental group of animals - training phase
 if(strcmpi(grid.animalgroup,'Experimental') && strcmpi(grid.condition,'Training'))
-    
-    vowel.sequence                  = input('Enter name of sequence - [ABCD]: ' ,'s');
+        
     grid.stimGrid                   = vowel.freqs;
     grid.repeatsPerCondition        = 48; % 48 repeats of 1 fixed stimulus
     
@@ -139,10 +163,6 @@ end
 
 %% sweep parameters
 
-grid.postStimSilence     = 0; % in seconds (added in stimgen_st_vowelsequence_1A)
-
-grid.vowel = vowel;
-
-% optional parameters
-grid.randomiseGrid = false;
-% grid.legacyLevelOffsetDB = 0; % avoid using this
+grid.postStimSilence    = 0; % in seconds (added in stimgen_st_vowelsequence_1A)
+grid.vowel              = vowel;
+grid.randomiseGrid      = false;
