@@ -59,7 +59,7 @@ function stim = stimgen_loadSoundFile(expt, grid, varargin)
         [uncalib, sampleRateInFile] = audioread(filename);
         uncalib = uncalib';
 
-        if floor(sampleRateInFile)~=floor(sampleRate)
+        if floor(sampleRateInFile)~=floor(sampleRate) && ~strcmp(grid.name(1:6), 'mixmix')
             error(sprintf('Sample rate (%d Hz) in file doesn''t match grid (%d Hz)', ...
                           floor(sampleRateInFile), floor(sampleRate)));
         end
