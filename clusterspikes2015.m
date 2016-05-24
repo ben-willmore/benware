@@ -171,7 +171,7 @@ for dirIdx = 1:length(dirs)
         l = load(sweepInfoFile);
         paramsFile = l.paramsFile;
         nSitesPerShank = l.nSitesPerShank;
-      
+
       else
         [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
       end
@@ -179,7 +179,7 @@ for dirIdx = 1:length(dirs)
 
       % check if spikes have been detected; if not, detect them
       spikedetektDir = getLastSpikedetektDir(dir);
-    
+
       if ~isempty(spikedetektDir) && exist([spikedetektDir filesep 'detektion_done.txt'], 'file')
         fprintf('Found complete spikedetekt data in %s; skipping spike detection\n', spikedetektDir);
 
@@ -199,20 +199,20 @@ for dirIdx = 1:length(dirs)
                'PATH=~/Library/Enthought/Canopy_64bit/User/bin/:Library/Enthought/Canopy_32bit/User/bin/:$PATH ' ...
                'python ' pwd '/klustakwik/detektspikes.py ' paramsFile];
         end
-      
+
         fprintf('= Detecting spikes by running command:\n %s\n', cmd);
         res = system(cmd); % TODO: python / spikedetekt will crash if there is not enough diskspace - handle this
-      
+
         if res>0
           error('Command failed');
         end
 
         spikedetektDir = getLastSpikedetektDir(dir);
-      
+
         fid = fopen(sprintf('%s/detektion_done.txt',spikedetektDir),'w');
         fprintf(fid,'done\n');
         fclose(fid);
-      
+
       end
 
       for shankIdx = 1:nShanks
@@ -258,16 +258,16 @@ for dirIdx = 1:length(dirs)
           end
         end
       end
-    
+
       % move to shank-specific directories
       for shankIdx = 1:nShanks
         shankDir = sprintf([dir filesep 'shank.%d'], shankIdx);
         if ~exist(shankDir, 'dir')
           mkdir(shankDir);
         end
-        copyfile(sprintf([spikedetektDir filesep '*.%d'], shankIdx), shankDir); 
+        copyfile(sprintf([spikedetektDir filesep '*.%d'], shankIdx), shankDir);
         copyfile([dir filesep 'spikedetekt' filesep '*.probe'], shankDir);
-        copyfile([spikedetektDir filesep '*.xml'], shankDir); 
+        copyfile([spikedetektDir filesep '*.xml'], shankDir);
       end
     catch exc
       if ~skipFailures

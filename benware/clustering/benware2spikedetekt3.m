@@ -1,6 +1,8 @@
-function [paramsFile, nSitesPerShank] = benware2spikedetekt2(dataDir)
-% benware2spikedetekt2
+function [paramsFile, nSitesPerShank] = benware2spikedetekt3(dataDir)
+% benware2spikedetekt3
 % this is for new-style benware data, using interleaved files
+% it's identical to benware2spikedetekt2, except that it uses makeklustaparams3
+% to make a params file which is compatible with newer klusta* from May 2016
 
 if ispc
   filesep = '\\'; % yet another Matlab WTF... :/ - needed avoid invalid escape sequences in sprintf
@@ -15,6 +17,7 @@ end
 if ~exist([dataDir filesep 'gridInfo.mat'], 'file')
   error('%s is not a benware data directory\n', dataDir);
 end
+
 
 fprintf('Converting %s... to i16 format:\n', dataDir);
 l = load([dataDir filesep 'gridInfo.mat']);
@@ -93,9 +96,7 @@ end
 
 nFiles = 1; % number of data files
 
-fprintf('done\n');
-
-[paramsFile, probeFile, nSitesPerShank] = makeklustaparams(l.expt, l.grid, dataDir, shortFilename);
+[paramsFile, probeFile, nSitesPerShank] = makeklustaparams3(l.expt, l.grid, dataDir, shortFilename);
 
 datafile = shortFilename;
 save([dataDir filesep 'sweep_info.mat'], 'datafile', 'sweepLens', 'paramsFile', 'probeFile', 'nSitesPerShank');
