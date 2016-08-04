@@ -18,7 +18,7 @@ classdef tdtStimDevice < tdtDevice
 			obj.rcxSetups(2).versionTagValue = 7;
             obj.rcxSetups(3).rcxFilename = 'benware/tdt/%s-threechannelplay.rcx';
             obj.rcxSetups(3).versionTagName = [deviceInfo.name 'ThreeChannelPlayVer'];
-            obj.rcxSetups(3).versionTagValue = 7;
+            obj.rcxSetups(3).versionTagValue = 8;
 
 
 			% initialise the device
