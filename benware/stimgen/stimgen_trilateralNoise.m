@@ -45,7 +45,7 @@ function stim = stimgen_trilateralNoise(expt, grid, ...
 	envR = [envR envBoth];
 
 	stim = stim.*[envL; envR];
-    stim(3,:) = stim(2,:);
+    stim(3,:) = -stim(2,:); % duplicated but negative (so channels aren't identical)
 
 	% apply level offset
 	level_offset = level-94;
