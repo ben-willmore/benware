@@ -71,6 +71,13 @@ twoBySixteen = [10 9 8 7 5 6 4 3 2 1 11 12 13 14 15 16; ...
 order = transpose(twoBySixteen);
 probes(end).order = order(:)';
 
+probes(end+1).name = 'HZ32 (ECoG)';
+ECoG = [28 20 13 5; 29 21 12 4; 27 19 14 6; 30 22 11 3; ...
+						26 18 15 7; 31 23 10 2; 25 17 16 8; 32 24 9 1;];
+order = transpose(ECoG);
+probes(end).order = order(:)';
+
+
 % NeuroNexus connector pin maps from:
 % http://www.neuronexustech.com/support/probe-site-maps
 connectors = struct;
@@ -99,6 +106,11 @@ connectors(end).pins = [9 7 5 3 30 28 26 24; 13 14 15 16 17 18 19 20; ...
 						% notch (square) at top left (left to right, top then bottom);
 						% then notch at top right (left to right, top then bottom)
 
+% added by James?!
+connectors(end+1).name = 'Z32 (rev 2)';
+connectors(end).pins = [9 10 11 12 21 22 23 24; 13 14 15 16 17 18 19 20; ...
+						32 31 30 29 4 3 2 1; 28 27 26 25 8 7 6 5];
+
 connectors(end+1).name = 'A64';
 connectors(end).pins = [41 0 0 24; 38 0 0 27; 43 0 0 22; 37 0 0 28; 36 39 26 29; ...
 						45 40 25 20; 47 42 23 18; 49 44 21 16; 51 46 19 14; 53 48 17 12; ...
@@ -120,6 +132,8 @@ connectors(end).pins = [1 3 5 7 9 11 13 15; 2 4 6 8 10 12 14 16; ...
 						% notch (square) at left (left to right, top then bottom);
 						% then notch at top right (left to right, top then bottom) 
 
+                        
+                        
 connectors(end+1).name = 'ZCA-NN64';
 connectors(end).pins = [18 0 0 16; 20 0 0 14; 22 0 0 12; 24 0 0 10; 28 26 8 6; ...
 						32 30 4 2; 19 17 15 13; 23 21 11 9; 27 25 7 5; 31 29 3 1; ...
@@ -145,6 +159,11 @@ headstages(end).outputconnector = 'ZCA-NN32';
 
 headstages(end+1).name = 'ZC32 (ZIF-clip)';
 headstages(end).inputconnector = 'Z32';
+headstages(end).outputconnector = 'ZC32';
+
+% James added this?!
+headstages(end+1).name = 'ZC32 (rev 2; added by James)';
+headstages(end).inputconnector = 'Z32 (rev 2)';
 headstages(end).outputconnector = 'ZC32';
 
 headstages(end+1).name = 'ZCA-NN64 (A-series to ZIF-clip adaptor)';
