@@ -11,14 +11,7 @@ sudo apt-get install libblas-dev liblapack-dev gfortran
 sudo apt-get install python-sip-dev python-qt4-dev 
 sudo apt-get install python-qt4 qt4-dev-tools libxext-dev
 ```
-
-2. Copy the following files from lin-wjhs002.dpag.ox.ac.uk:
-```
-scp -r ben@lin-wjhs002.dpag.ox.ac.uk:/usr/local/klustasuite /usr/local/
-scp -r ben@lin-wjhs002.dpag.ox.ac.uk:/usr/local/bin/klusta /usr/local/bin/
-scp -r ben@lin-wjhs002.dpag.ox.ac.uk:/usr/local/bin/klustaviewa /usr/local/bin/
-```
-
+2. Install klustasuite from http://klusta.readthedocs.io
 3. Download Benware from http://github.com/beniamino38/benware
 
 #### Mac:
@@ -27,14 +20,7 @@ scp -r ben@lin-wjhs002.dpag.ox.ac.uk:/usr/local/bin/klustaviewa /usr/local/bin/
 ```
 brew install hdf5 <others?>
 ```
-
-2. Copy the following files from Ben's laptop: 
-```
-scp -r ben@mc-dpag0036.dpag.ox.ac.uk:/usr/local/klustasuite /usr/local/ 
-scp -r ben@mc-dpag0036.dpag.ox.ac.uk:/usr/local/bin/klusta /usr/local/bin/ 
-scp -r ben@mc-dpag0036.dpag.ox.ac.uk:/usr/local/bin/klustaviewa /usr/local/bin/
-```
-
+2. Install klustasuite from http://klusta.readthedocs.io
 3. Download Benware from http://github.com/beniamino38/benware
 
 
