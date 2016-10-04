@@ -51,7 +51,7 @@ classdef tdt16bitStimDevice < tdtDevice
               errorBeep('Failed to set ScaleFactorL');
            end
 
-           if length(obj.currentStim)==0:
+           if length(obj.currentStim)==0
               errorBeep('tdt16bitStimDevice: obj.currentStim is empty');
            end
 
@@ -72,7 +72,7 @@ classdef tdt16bitStimDevice < tdtDevice
         function scaleFactor = getScaleFactor(obj)
            scaleFactor.L = obj.handle.GetTagVal('ScaleFactorL');
 
-           if length(obj.currentStim)==0:
+           if length(obj.currentStim)==0
               errorBeep('tdt16bitStimDevice: obj.currentStim is empty');
            end
 
@@ -387,7 +387,7 @@ classdef tdt16bitStimDevice < tdtDevice
             success = false;
 
             while ~success && nRetries<maxRetries
-                success = obj.handle.WriteTagV('WaveformE',offset,stim(3,:));
+                success = obj.handle.WriteTagVEX('WaveformE',offset,'I16',stim(3,:));
                 if ~success
                     fprintf('== WriteTagV WaveformE failed\n');
                     nRetries = nRetries + 1;
@@ -424,7 +424,7 @@ classdef tdt16bitStimDevice < tdtDevice
                 return
             end
 
-            if ~obj.handle.WriteTagV('WaveformE',0,stim(3,:))
+            if ~obj.handle.WriteTagVEX('WaveformE',0,'I16',stim(3,:))
                 errorBeep('WriteTagV WaveformE failed');
             end
 
