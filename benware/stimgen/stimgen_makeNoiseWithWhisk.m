@@ -1,4 +1,4 @@
-function stim = makeNoiseWithWhiskStim(expt, grid, ...
+function stim = stimgen_makeNoiseWithWhiskStim(expt, grid, ...
 									duration, delay, len, voltage, whiskdelay, whiskduration, level)
 
 %% get parameters
@@ -38,9 +38,9 @@ whiskingtime=length(whiskdelay:min(stimLen_samples, whiskdelay+whiskduration-1))
 
 t=[1:1:whiskingtime];
 A=voltage;
-f=0.0012865; %20hz
+f=0.0012865/2; %20hz
 y=((((A/2)*cos(f*t))-(voltage/2))*-1)+0.000001;
-%plot(t,y)
+%plot(t/sampleRate,y)
 whiskstim = zeros(1, stimLen_samples)+0.000001; % you need to give the piezo electric a little bit of current, otherwise it will make a noise on initiaition
 whiskstim(whiskdelay:min(stimLen_samples, whiskdelay+whiskduration-1)) =y;
 

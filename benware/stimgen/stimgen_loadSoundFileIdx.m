@@ -30,7 +30,7 @@ function stim = stimgen_loadSoundFileIdx(expt, grid, stimIdx)
     %% (sweepNum, etc)
 
     %% get parameters
-    sampleRate = grid.sampleRate;
+    sampleRate = round(grid.sampleRate);
     nChannels = expt.nStimChannels;
 
 	filename = grid.stimFiles{stimIdx};
@@ -46,7 +46,8 @@ function stim = stimgen_loadSoundFileIdx(expt, grid, stimIdx)
         end
  
     elseif strcmp(filename(end-3:end), '.wav')
-        [uncalib, sampleRateInFile] = audioread(filename);
+        %[uncalib, sampleRateInFile] = audioread(filename); %NH change, 20/10/2016
+        [uncalib, sampleRateInFile] = wavread(filename); %NH change, 20/10/2016
         uncalib = uncalib';
 
         if floor(sampleRateInFile)~=floor(sampleRate)

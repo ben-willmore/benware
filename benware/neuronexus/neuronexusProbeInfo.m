@@ -77,6 +77,12 @@ ECoG = [28 20 13 5; 29 21 12 4; 27 19 14 6; 30 22 11 3; ...
 order = transpose(ECoG);
 probes(end).order = order(:)';
 
+probes(end+1).name = 'A2x32';
+eightByEight = [17 16 18 15 19 14 20 13 21 12 22 11 23 10 24 9 25 8 26 7 27 6 28 5 29 4 30 3 31 2 32 1; ...
+    49 48 50 47 51 46 52 45 53 44 54 43 55 42 56 41 57 40 58 39 59 38 60 37 61 36 62 35 63 34 64 33];
+order = transpose(eightByEight);
+probes(end).order = order(:)';
+
 
 % NeuroNexus connector pin maps from:
 % http://www.neuronexustech.com/support/probe-site-maps

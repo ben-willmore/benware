@@ -39,6 +39,7 @@ else
 
   % stimulus directory for "directory of wav file" stimuli
   stimulus_dir = './stimulusdir';
+
 end
 
 % no more parameters after this

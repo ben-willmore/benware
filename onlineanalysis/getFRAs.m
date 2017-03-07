@@ -1,14 +1,14 @@
 addpath('.');
 
-baseDir = 'f:\auditory-objects.data\';
+baseDir = 'f:\auditory-objects.data\expt20161019\';
 %baseDir = '~/scratch/onlineanalysis/';
-exptNumber = 81;
+exptNumber = 20161019;
 
 t_min = 0; % parameters of spike window
-t_max = 25;
+t_max = 150;
 
 exptPattern = [baseDir 'expt%E\'];
-exptDir = regexprep(exptPattern, '%E', num2str(exptNumber));
+exptDir = regexprep(exptPattern, '%E', num2str(exptNumber))
 subdirName = chooseOntehflyDirectory(exptDir);
 dataDir = [exptDir subdirName '\'];
 

@@ -25,7 +25,7 @@ function grid = grid_quickFRA()
 
   % sweep parameters
    grid.postStimSilence = 0;
-   grid.repeatsPerCondition = 5;%
+   grid.repeatsPerCondition = 15;%
   
 
 

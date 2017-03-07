@@ -40,7 +40,8 @@ end
 if length(sampleWavFile)>0
   % then we have a file whose sample rate we can read in order to 
   % set grid.sampleRate.
-  [y, fs] = audioread(stimFiles{1});
+  %[y, fs] = audioread(stimFiles{1}); NH change 28/10/2016
+[y, fs] = wavread(stimFiles{1}); % NH change 28/10/2016
 
   sampleRates =   [0.125 0.25 0.5 1 2 4 8]*tdt50k;
   sampleRateIdx = find((abs(fs-sampleRates)<1));
