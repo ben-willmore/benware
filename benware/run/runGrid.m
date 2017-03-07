@@ -15,7 +15,9 @@ diary(constructDataPath([expt.dataDir expt.logFilename], grid, expt));
 
 fprintf_title('Preparing to record');
 
-hardware.dataDevice.setAudioMonitorChannel(state.audioMonitor.channel);
+if ~isempty(hardware.dataDevice)
+    hardware.dataDevice.setAudioMonitorChannel(state.audioMonitor.channel);
+end
 
 % close open files if there is an error or ctrl-c
 cleanupObject = onCleanup(@()cleanup(hardware));
@@ -40,12 +42,14 @@ else
   nSamplesExpected = floor((size(stim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
 end
 
-if ~isfield(state, 'onlineData')
-  state.onlineData = onlineDataInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
+if isempty(hardware.dataDevice)
+  plotData = [];
+else
+  if ~isfield(state, 'onlineData')
+    state.onlineData = onlineDataInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
+  end
+  plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
 end
-
-plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
-
 
 %% run sweeps
 % =============
@@ -210,7 +214,9 @@ while sweepNum<=grid.nSweepsDesired
   
   % store sweep duration
   sweeps(sweepNum).sweepLen.samples = nSamples;
-  sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/expt.dataDeviceSampleRate*1000;
+  if expt.dataDeviceSampleRate > 0
+      sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/expt.dataDeviceSampleRate*1000;
+  end
   
   % save sweep metadata
   saveSingleSweepInfo(sweeps(sweepNum), grid, expt, sweepNum);
@@ -226,8 +232,9 @@ while sweepNum<=grid.nSweepsDesired
   %plotData.lastSweepSpikes = sweeps(sweepNum).spikeTimes;
 
   setIdx = grid.randomisedGridSetIdx(sweepNum);
-  onlineDataUpdate(setIdx, sweeps(sweepNum).spikeTimes, lfp, sampleWaveforms);
-
+  if ~isempty(hardware.dataDevice)
+    onlineDataUpdate(setIdx, sweeps(sweepNum).spikeTimes, lfp, sampleWaveforms);
+  end
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
   
   % recreate main figure
@@ -257,7 +264,9 @@ while sweepNum<=grid.nSweepsDesired
     end
   end
   
-  visualBellOff;
+  try
+    visualBellOff;
+  end
 
   % successfully on to the next sweep
   sweepNum = sweepNum + 1;

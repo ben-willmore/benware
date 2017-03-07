@@ -19,7 +19,7 @@ classdef tdt16bitStimDevice < tdtDevice
 			obj.rcxSetups(1).versionTagValue = 3;
 			obj.rcxSetups(2).rcxFilename = 'benware/tdt/%s-stereoplay16bit.rcx';
 			obj.rcxSetups(2).versionTagName = [deviceInfo.name 'StereoPlay16bitVer'];
-			obj.rcxSetups(2).versionTagValue = 7;
+			obj.rcxSetups(2).versionTagValue = 8;
             obj.rcxSetups(3).rcxFilename = 'benware/tdt/%s-threechannelplay16bit.rcx';
             obj.rcxSetups(3).versionTagName = [deviceInfo.name 'ThreeChannelPlay16bitVer'];
             obj.rcxSetups(3).versionTagValue = 8;
@@ -289,6 +289,10 @@ classdef tdt16bitStimDevice < tdtDevice
 
         end
 
+        function isPlaying = isPlaying(obj)
+            isPlaying = obj.handle.GetTagVal('Go') ~= 0;
+        end
+        
         function index = getStimIndex(obj)
             index = obj.handle.GetTagVal('StimIndex')*2;
         end

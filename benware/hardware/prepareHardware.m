@@ -50,28 +50,32 @@ else
 end
 
 % set up data device
-if ~isfield(hardware, 'dataDevice')
-    fprintf('  * Initialising data device...\n');
-    hardware.dataDevice = feval(expt.dataDeviceType, ...
-								expt.dataDeviceInfo, expt.dataDeviceSampleRate, ...
-					            expt.channelMapping, hardware.stimDevice);
+if strcmpi(expt.dataDeviceType, 'none')
+    hardware.dataDevice = [];
 else
-    if ~strcmp(class(hardware.dataDevice), expt.dataDeviceType)
-        ok = false;
-        message = sprintf('wrong data device type (%s rather than %s)', ...
-            class(hardware.dataDevice), expt.dataDeviceType);
+    if ~isfield(hardware, 'dataDevice')
+        fprintf('  * Initialising data device...\n');
+        hardware.dataDevice = feval(expt.dataDeviceType, ...
+                                    expt.dataDeviceInfo, expt.dataDeviceSampleRate, ...
+                                    expt.channelMapping, hardware.stimDevice);
     else
-        [ok, message] = hardware.dataDevice.checkDevice(...
-                expt.dataDeviceInfo, expt.dataDeviceSampleRate, expt.channelMapping);
-    end
+        if ~strcmp(class(hardware.dataDevice), expt.dataDeviceType)
+            ok = false;
+            message = sprintf('wrong data device type (%s rather than %s)', ...
+                class(hardware.dataDevice), expt.dataDeviceType);
+        else
+            [ok, message] = hardware.dataDevice.checkDevice(...
+                    expt.dataDeviceInfo, expt.dataDeviceSampleRate, expt.channelMapping);
+        end
 
-    if ok
-        fprintf('  * Data device already initialised\n');
-    else
-    	fprintf('  * Reinitialising data device (%s)...\n', message);
-    	hardware.dataDevice = feval(expt.dataDeviceType, ...
-								expt.dataDeviceInfo, expt.dataDeviceSampleRate, ...
-					            expt.channelMapping, hardware.stimDevice);
+        if ok
+            fprintf('  * Data device already initialised\n');
+        else
+            fprintf('  * Reinitialising data device (%s)...\n', message);
+            hardware.dataDevice = feval(expt.dataDeviceType, ...
+                                    expt.dataDeviceInfo, expt.dataDeviceSampleRate, ...
+                                    expt.channelMapping, hardware.stimDevice);
+        end
     end
 end
 
@@ -100,6 +104,6 @@ if ~strcmpi(expt.stimDeviceType, 'none')
   end
 end
 
-if hardware.dataDevice.sampleRate ~= expt.dataDeviceSampleRate
+if ~isempty(hardware.dataDevice) && (hardware.dataDevice.sampleRate ~= expt.dataDeviceSampleRate)
   errorBeep('dataDevice sample rate is wrong');
 end

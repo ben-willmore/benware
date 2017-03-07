@@ -8,6 +8,27 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
 
   global state;
   
+  if isempty(hardware.dataDevice)
+      % trigger stimulus presentation and data collection
+      timeStamp = clock;
+      hardware.triggerDevice.trigger();
+      
+      endOfSweep = false;
+  
+      while ~endOfSweep
+          hardware.stimDevice.workDuringSweep;
+          
+          if ~hardware.stimDevice.isPlaying()
+              endOfSweep = true;
+          end
+      end
+      nSamplesReceived = 0;
+      spikeTimes = cell(nChannels,1);
+      lfp = zeros(nChannels,1000);
+      sampleWaveforms = cell(nChannels,1);
+      return
+  end
+  
   % reset data device and tell it how long the sweep will be
   try
     hardware.dataDevice.reset(sweepLen*1000);
