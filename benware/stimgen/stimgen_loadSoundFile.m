@@ -7,9 +7,9 @@ function stim = stimgen_loadSoundFile(expt, grid, varargin)
     %%   uncomp = stimgen_function(expt, grid, parameters{:})
     %% where 'parameters' is a row from grid.stimGrid, so the parameters are values
     %% of the stimulus parameters specified in grid.stimGridTitles.
-    %% 
+    %%
     %% Stimulus generation functions must obey the following rules:
-    %% 
+    %%
     %% 1. Must have a name that begins stimgen_
     %% 2. Accept parameters:
     %%      expt: standard benware expt structure (as loaded by loadexpt.m)
@@ -21,9 +21,9 @@ function stim = stimgen_loadSoundFile(expt, grid, varargin)
     %%      B. The first dimension of this matrix must match expt.nStimChannels.
     %%      C. The values are measured in Pascals, so that a sound with an RMS of 1
     %%         corresponds to 1 Pascal RMS, or 94 dB SPL.
-    %% 
+    %%
     %% The correct stimulus files are found by
-    %% finding experiment parameters in the grid and expt structures, and 
+    %% finding experiment parameters in the grid and expt structures, and
     %% using constructStimPath to replace % tokens with appropriate values
     %% (sweepNum, etc)
 
@@ -59,9 +59,9 @@ function stim = stimgen_loadSoundFile(expt, grid, varargin)
         [uncalib, sampleRateInFile] = audioread(filename);
         uncalib = uncalib';
 
-        if floor(sampleRateInFile)~=floor(sampleRate) && ~strcmp(grid.name(1:6), 'mixmix')
+        if round(sampleRateInFile)~=round(sampleRate) && ~strcmp(grid.name(1:6), 'mixmix')
             error(sprintf('Sample rate (%d Hz) in file doesn''t match grid (%d Hz)', ...
-                          floor(sampleRateInFile), floor(sampleRate)));
+                          round(sampleRateInFile), round(sampleRate)));
         end
     end
 
