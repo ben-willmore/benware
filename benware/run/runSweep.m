@@ -16,16 +16,20 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       endOfSweep = false;
   
       while ~endOfSweep
-          hardware.stimDevice.workDuringSweep;
+          hardware.stimDevice.workDuringSweep();
           
           if ~hardware.stimDevice.isPlaying()
               endOfSweep = true;
+%           else
+%               fprintf('Waiting for end of stimulus...\n');
           end
       end
       nSamplesReceived = 0;
       spikeTimes = cell(nChannels,1);
       lfp = zeros(nChannels,1000);
       sampleWaveforms = cell(nChannels,1);
+      pause(0.1); % throttle to prevent writetag errors
+      pause(0.9); % testing
       return
   end
   

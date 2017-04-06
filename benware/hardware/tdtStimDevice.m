@@ -178,6 +178,10 @@ classdef tdtStimDevice < tdtDevice
 
         end
 
+        function isPlaying = isPlaying(obj)
+            isPlaying = obj.handle.GetTagVal('Go') ~= 0;
+        end
+        
         function index = getStimIndex(obj)
             index = obj.handle.GetTagVal('StimIndex');
         end

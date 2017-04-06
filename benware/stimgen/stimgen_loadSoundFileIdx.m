@@ -46,8 +46,9 @@ function stim = stimgen_loadSoundFileIdx(expt, grid, stimIdx)
         end
  
     elseif strcmp(filename(end-3:end), '.wav')
-        %[uncalib, sampleRateInFile] = audioread(filename); %NH change, 20/10/2016
-        [uncalib, sampleRateInFile] = wavread(filename); %NH change, 20/10/2016
+        [uncalib, sampleRateInFile] = audioread(filename); %NH change, 20/10/2016
+%         [uncalib, sampleRateInFile] = wavread(filename); %NH change,
+%         20/10/2016 - ST reverted to audioread - 31.03.17
         uncalib = uncalib';
 
         if floor(sampleRateInFile)~=floor(sampleRate)
