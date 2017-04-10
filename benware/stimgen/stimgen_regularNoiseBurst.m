@@ -40,7 +40,7 @@ function stim = stimgen_regularNoiseBurst(expt, grid, duration, delay, len, repe
 	uncalib(1, delay:delay+len-1) = randn(1, len);
 
 	%% repeat the stimulus
-	uncalib(1, :) = repmat(uncalib(1, :), [1, repeats]);
+	uncalib = repmat(uncalib, [1, repeats]);
 
 	% provide 2 (dichotic) channels if nChannels = 2
 	stim = repmat(uncalib, nChannels, 1);
