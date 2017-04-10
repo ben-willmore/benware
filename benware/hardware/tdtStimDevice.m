@@ -231,7 +231,12 @@ classdef tdtStimDevice < tdtDevice
             %if ~stimDevice.WriteTagV('WaveformR',offset,stim(2,:))
             %    errorBeep('WriteTagV WaveformR failed');
             %end;
-
+ 
+            if size(stim, 2) == 1
+                fprintf('== Adding a blank sample to the end of the stimulus to avoid upload failure');
+                stim(:, 2) = 0;
+            end
+            
             maxRetries = 2;
 
             nRetries = 0;
@@ -240,8 +245,10 @@ classdef tdtStimDevice < tdtDevice
             while ~success && nRetries<maxRetries
                 success = obj.handle.WriteTagV('WaveformL',offset,stim(1,:));
                 if ~success
+                    pause(1.0);
                     fprintf('== WriteTagV WaveformL failed\n');
                     nRetries = nRetries + 1;
+                    nRetries
                 end
             end
 
