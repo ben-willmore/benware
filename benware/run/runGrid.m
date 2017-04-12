@@ -280,7 +280,7 @@ end
 
 % cleanup seems to happen on quit anyway, not sure why
 %cleanup(hardware);
-visualBellOff;
+%visualBellOff;
 
 if ~state.userQuit && isfield(state, 'bugle') && state.bugle
   [snd, fs] = audioread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);

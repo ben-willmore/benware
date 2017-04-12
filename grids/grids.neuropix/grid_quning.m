@@ -34,7 +34,7 @@ function grid = grid_quning()
 
     % frequencies and levels
     freqs = logspace(log10(500), log10(500*2^5.75), 5.75*4+1);  
-    levels = 40:20:100;
+    levels = 40:10:80;
     tonedur = 100;
 
     grid.stimGrid = createPermutationGrid(freqs, tonedur, levels);
