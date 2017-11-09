@@ -7,17 +7,17 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   %% and inform the stimDevice of the stimulus length
 
   global state;
-  
+
   if isempty(hardware.dataDevice)
       % trigger stimulus presentation and data collection
       timeStamp = clock;
       hardware.triggerDevice.trigger();
-      
+
       endOfSweep = false;
-  
+
       while ~endOfSweep
           hardware.stimDevice.workDuringSweep();
-          
+
           if ~hardware.stimDevice.isPlaying()
               endOfSweep = true;
 %           else
@@ -29,17 +29,17 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       lfp = zeros(nChannels,1000);
       sampleWaveforms = cell(nChannels,1);
       pause(0.1); % throttle to prevent writetag errors
-      pause(0.9); % testing
+      %pause(0.9); % testing
       return
   end
-  
+
   % reset data device and tell it how long the sweep will be
   try
     hardware.dataDevice.reset(sweepLen*1000);
   catch
     keyboard
   end
-  
+
   % check for stale data in data device buffer
   % FIXME: This hack should not be here. If we read these values
   % immedately after a reset, we frequently get stale data errors
@@ -51,10 +51,10 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   if any(countAllData(hardware.dataDevice, nChannels) ~= 0)
     errorBeep('Stale data in data buffer');
   end
- 
+
   % make matlab buffer for data
   nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1;
-  
+
   if hardware.dataDevice.is16Bit
       nSamplesExpected = floor(nSamplesExpected/2)*2;
   end
@@ -63,7 +63,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
 
   filteredData = zeros(nChannels, nSamplesExpected);
   filterIndex = 0;
-  
+
   % open data files
   if saveWaveforms
     % only relevant for single-file-per-expt data
@@ -71,7 +71,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
     %   % save in a single, interleaved file
     %   dataFileHandles = dataFiles; % file has already been opened by runGrid
     % else
-  
+
     if state.klustaFormat
       dataFileHandles = fopen(dataFiles, 'w'); % one file per sweep
     else
@@ -81,19 +81,19 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       end
     end
   end
-  
+
   % cell array for storing spike times
   spikeTimes = cell(1, nChannels);
 
   % keep track of how much of stimulus has been uploaded
   samplesUploaded = 0;
-  
+
   if useJamesSpikeThreshold
     % waveform statistics for spike detection
     fprintf('runSweep: warning: using global state.waveformStats\n');
     waveformStats = state.waveformStats;
   end
-  
+
   % trigger stimulus presentation and data collection
   timeStamp = clock;
   hardware.triggerDevice.trigger();
@@ -102,7 +102,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
 
   plotData = plotReset(plotData);
 
-  
+
   % while trial is running:
   % * upload next stimulus as far as possible
   % * download data as fast as possible while trial is running
@@ -111,27 +111,27 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   if DEBUG
       fprintf('Samples expected %d\n', nSamplesExpected);
   end
-  
+
   % loop until we've received (and saved) all data
   nSamplesReceivedAlready = 0;
   endOfSweep = false;
-  
+
   while ~endOfSweep
-      
+
     % allow stimDevice to do something during sweep (i.e. upload stimulus)
     if ~state.slaveMode
       hardware.stimDevice.workDuringSweep;
     end
-    
+
     % download data
     newdata = hardware.dataDevice.downloadAvailableData(nSamplesReceived);
-    
+
     if ~isempty(newdata)
         sz = size(newdata, 2);
         data(:, nSamplesReceived+1:nSamplesReceived+sz) = newdata;
         nSamplesReceived = nSamplesReceived + sz;
     end
-    
+
     % save waveforms
     if saveWaveforms
       if state.klustaFormat
@@ -143,7 +143,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
         end
       end
     end
-    
+
     % bandpass filter data and detect spikes
     if (nSamplesReceived-filterIndex) > (hardware.dataDevice.sampleRate*100/1000) % at least 150msec of data
       [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
@@ -157,7 +157,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       filterIndex = filterIndex + size(filtData,2);
 
     end
- 
+
     % check audio monitor is on the right channel
     if state.audioMonitor.changed
       hardware.dataDevice.setAudioMonitorChannel(state.audioMonitor.channel);
@@ -166,7 +166,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
 
     % plot data
     plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
-    
+
     % check whether we're done
     if state.slaveMode
       if (nSamplesReceived == nSamplesReceivedAlready) || (nsamplesReceived>=nSamplesExpected) % no new samples
@@ -181,19 +181,19 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
     nSamplesReceivedAlready = nSamplesReceived;
 
   end
-  
+
   fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
   % allow stimDevice to do some work
   if ~state.slaveMode
     hardware.stimDevice.workAfterSweep;
   end
-  
+
   if state.slaveMode
     data = data(:,1:nSamplesReceived);
   end
-  
-  % finish detecting spikes  
+
+  % finish detecting spikes
   [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
   filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
   if useJamesSpikeThreshold
@@ -202,7 +202,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
     spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate);
   end
   filterIndex = filterIndex + size(filtData,2);
-  
+
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 
   % final plot
@@ -220,7 +220,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
         sampleWaveforms{chan}(:, tmIdx) = filteredData(chan, samples(tmIdx):samples(tmIdx)+sampleWaveformLength-1);
      end
   end
-  
+
   % close data files if not using klustaFormat single-file-per-expt
   if saveWaveforms
       if state.klustaFormat
@@ -229,7 +229,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
         for file = 1:length(dataFileHandles)
           fclose(dataFileHandles(chan));
         end
-      end  
+      end
   end
 
   % check for blank data channels
@@ -260,18 +260,18 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   plotData.nSweeps = plotData.nSweeps + 1;
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   plotData.lastSweepSpikes = spikeTimes;
-  
+
   %
   if useJamesSpikeThreshold
       fprintf('runSweep: warning: saving waveformStats\n');
       state.waveformStats = waveformStats;
   end
-  
+
   % optional: check data thoroughly (too slow to be used normally)
   global checkdata
 
   if checkdata
-    fprintf('  * DATA INTEGRITY CHECK...\n');    
+    fprintf('  * DATA INTEGRITY CHECK...\n');
     fprintf('  * Checking stimulus in buffer...');
     [nStimChans, nStimSamples] = size(stim);
     teststim = hardware.stimDevice.downloadStim(0, nStimSamples, nStimChans);
@@ -280,7 +280,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       errorBeep('Stimulus mismatch!');
     end
     fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
-    
+
     fprintf('  * Checking data in memory');
     testData = hardware.dataDevice.downloadAllData;
 
@@ -310,7 +310,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       end
       fprintf([' ' num2str(nChannels) ' channels verified.\n']);
     end
-    
+
     fprintf(['  * DATA OK. Check complete after ' num2str(toc) ' sec.\n']);
   end
-  
+
