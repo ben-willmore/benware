@@ -39,12 +39,12 @@ if OLDCOMPENSATION
 else
     stimInfo.stimGridTitles = grid.stimGridTitles;
     stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
-    
+
     if strcmpi(expt.stimDeviceType, 'none')
       stim = [];
       return;
     end
-    
+
     parameters = num2cell(stimInfo.stimParameters);
 
     % generate stimulus vector/matrix
@@ -79,19 +79,19 @@ else
         errorBeep('Stimulus function %s did not generate the correct number of channels (%d)', ...
                     func2str(stimGenerationFunction), expt.nStimChannels);
     end
-    
+
     if isfield(grid, 'levelOffsetDB')
         fprintf('= levelOffsetDB: Boosting level by %d dB\n', grid.levelOffsetDB);
         amplitudeMultiplier = 10^(grid.levelOffsetDB/20);
         nAudioChannels = length(grid.compensationFilters);
         uncomp(1:nAudioChannels,:) = uncomp(1:nAudioChannels,:) * amplitudeMultiplier;
     end
-    
+
     % at this point, stim is equal to the ideal stimulus, i.e.
     % it has not been processed with the headphone compensation or the
     % absolute level compensation.
     % So, the stimulus can be checked here (e.g. the RMS level)
-    
+
     % check maximum level of stimulus in 5ms increments
     std_n = round(.005*grid.sampleRate);
     l = size(uncomp, 2);
@@ -102,23 +102,42 @@ else
       sd(ii) = max(std(r));
     end
     max_level = 20*log10(sd)+94;
-    
+
     fprintf(['  * maximum levels: [ ' num2str(max_level, '%0.2f '), ' ] dB\n']);
 
     if max_level>110
         errorBeep('== Warning: maximum sound level is >110dB');
     end
-    
-    
+
+
     % apply relative and absolute compensation
     if grid.applyCompensationFilters
+
+        % use the maximum value of the compensation filter to define the offset
+        filterOffset = nan(1, length(expt.nStimChannels));
+        for chan = 1:length(expt.nStimChannels)
+            filterOffset(chan) = find(grid.compensationFilters{chan}==max(grid.compensationFilters{chan}), 1);
+        end
+
+        if any(filterOffset ~= 1)
+            fprintf('= Warning: Compensation filters do not appear to be minimum phase; offset is not 1');
+        end
+
+        if any(filterOffset(chan) ~= filterOffset(1))
+            fprintf('= Warning: Compensation filters have different offsets in different channels; using filterOffset(1) only');
+        end
+
+        filterOffset = filterOffset(1);
+
         stim = {};
         for chan = 1:expt.nStimChannels
             if chan<=length(grid.compensationFilters)
                 % then this is assumed to be a compensatable audio channel
                 % (not a pure voltage for driving the LED for example)
                 fprintf('= Compensating channel %d for frequency response\n', chan);
-                stim{chan} = conv(grid.compensationFilters{chan}, uncomp(chan,:));
+                stim_long = conv(grid.compensationFilters{chan}, uncomp(chan,:), 'full');
+                stim{chan} = stim_long(filterOffset:end);
+
                 if isfield(grid, 'legacyLevelOffsetDB')
                     if length(grid.legacyLevelOffsetDB)==1
                         level_offset = grid.legacyLevelOffsetDB(1);
@@ -140,4 +159,4 @@ else
         stim = uncomp;
     end
 
-end    
+end

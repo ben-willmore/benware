@@ -13,10 +13,10 @@ end
 
 compensationFilterFile = expt.compensationFilterFile;
 
-if ~ispc
-  fprintf('== Using FAKE compensation filters from ./benware/fakeCompensationFilters\n');
-  compensationFilterFile = fix_slashes('./benware/fakeCompensationFilters/compensation_filters.mat');
-end
+% if ~ispc
+%   fprintf('== Using FAKE compensation filters from ./benware/fakeCompensationFilters\n');
+%   compensationFilterFile = fix_slashes('./benware/fakeCompensationFilters/compensation_filters.mat');
+% end
 
 % load filters for all sample rates
 l = load(compensationFilterFile);
