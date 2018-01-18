@@ -29,7 +29,6 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       lfp = zeros(nChannels,1000);
       sampleWaveforms = cell(nChannels,1);
       pause(0.1); % throttle to prevent writetag errors
-      %pause(0.9); % testing
       return
   end
 

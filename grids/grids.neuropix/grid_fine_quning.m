@@ -1,4 +1,4 @@
-function grid = grid_quning()
+function grid = grid_fine_quning()
     %% stim = grid_quning()
     %%
     %% This is a model for new-style (2016 onward) benware stimulus grid functions
@@ -33,16 +33,20 @@ function grid = grid_quning()
     grid.stimGridTitles = {'Frequency', 'Duration', 'Level'};
 
     % frequencies and levels
-    freqs = logspace(log10(500), log10(40000), 15);
+   % frequencies and levels
+    f_min = 300;
+    n_octaves = 5;
+    f_max = f_min*2^n_octaves;
+    steps_per_octave = 20;
+    freqs = logspace(log10(f_min), log10(f_max), n_octaves*steps_per_octave+1);
     levels = 40:10:80;
     tonedur = 100;
 
     grid.stimGrid = createPermutationGrid(freqs, tonedur, levels);
 
     % sweep parameters
-    grid.postStimSilence = 0;%.4; % in seconds %MR
-    grid.repeatsPerCondition = 15;
+    grid.postStimSilence = 0;% MR .4; % in seconds
+    grid.repeatsPerCondition = 6;
 
     % optional parameters
     % grid.randomiseGrid = true;
-    % grid.legacyLevelOffsetDB = 0; % avoid using this

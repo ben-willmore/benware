@@ -31,8 +31,9 @@ classdef tdtStimDevice < tdtDevice
 			rcxSetup = obj.rcxSetups(nChannels);
 			rcxFilename = sprintf(rcxSetup.rcxFilename, deviceInfo.name);
 			initialise@tdtDevice(obj, deviceInfo, rcxFilename, sampleRate);
-            if ~obj.checkDevice(deviceInfo, sampleRate, nChannels);
-                errorBeep('StimDevice is not in requested state after initialisation');
+            [ok, message] = obj.checkDevice(deviceInfo, sampleRate, nChannels);
+            if ~ok
+                errorBeep(message);
             end
         end
 

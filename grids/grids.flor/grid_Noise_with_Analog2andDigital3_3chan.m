@@ -26,6 +26,15 @@ visual_Aud_grid=createPermutationGrid(800, retinotopic_positions(end)+retinotopi
 
 
 grid.stimGrid = cat(1,cat(1,auditory_grid,visual_grid),visual_Aud_grid);
+repeatsPerCondition=20;
+idx = [];
+
+for ii = 1:repeatsPerCondition
+    idx = [idx randperm(size(grid.stimGrid, 1))];
+end
+grid.randomisedGrid = grid.stimGrid(idx, :);
+grid.nSweepsDesired = size(grid.randomisedGrid, 1);
+grid.stimGrid=grid.stimGrid(idx, :);
 
 %  fprintf('For calibration only!\n');
 %  pause;
@@ -33,7 +42,9 @@ grid.stimGrid = cat(1,cat(1,auditory_grid,visual_grid),visual_Aud_grid);
 
 % sweep parameters
 grid.postStimSilence = 0;
-grid.repeatsPerCondition = 20;
+grid.repeatsPerCondition = 1;
+grid.randomiseGrid = false;
+
 
 % i=23
 % stim = stimgen_makeNoiseWithAnalandDigTTL(expt, grid, ...
