@@ -120,11 +120,11 @@ else
         end
 
         if any(filterOffset ~= 1)
-            fprintf('= Warning: Compensation filters do not appear to be minimum phase; offset is not 1');
+            fprintf('= Warning: Compensation filters do not appear to be minimum phase; offset is not 1\n');
         end
 
         if any(filterOffset(chan) ~= filterOffset(1))
-            fprintf('= Warning: Compensation filters have different offsets in different channels; using filterOffset(1) only');
+            fprintf('= Warning: Compensation filters have different offsets in different channels; using filterOffset(1) only\n');
         end
 
         filterOffset = filterOffset(1);

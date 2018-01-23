@@ -40,7 +40,7 @@ function grid = grid_quning()
     grid.stimGrid = createPermutationGrid(freqs, tonedur, levels);
 
     % sweep parameters
-    grid.postStimSilence = 0;%.4; % in seconds %MR
+    grid.postStimSilence = 2;%.4; % in seconds %MR
     grid.repeatsPerCondition = 15;
 
     % optional parameters

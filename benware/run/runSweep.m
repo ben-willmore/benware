@@ -12,16 +12,15 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       % trigger stimulus presentation and data collection
       timeStamp = clock;
       hardware.triggerDevice.trigger();
+      tic;
 
       endOfSweep = false;
 
       while ~endOfSweep
           hardware.stimDevice.workDuringSweep();
 
-          if ~hardware.stimDevice.isPlaying()
+          if ~hardware.stimDevice.isPlaying() && toc > sweepLen
               endOfSweep = true;
-%           else
-%               fprintf('Waiting for end of stimulus...\n');
           end
       end
       nSamplesReceived = 0;
